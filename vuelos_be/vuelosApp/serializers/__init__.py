@@ -1,0 +1,5 @@
+from .ciudadesSerializer import CiudadesSerializer
+from .reservasSerializer import ReservaSerializer
+from .tarjetasSerializer import TarjetasSerializer
+from .userSerializer import UserSerializer
+from .vuelosSerializer import VuelosSerializer
