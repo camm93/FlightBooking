@@ -1,5 +1,6 @@
 from django.db import models
 
+
 CIUDADES_OPT = (
     ("1", "Amazonía"),
     ("2", "Barranquilla"),
@@ -18,6 +19,12 @@ CIUDADES_OPT = (
     ("15", "Villavicencio")
 )
 
-class Ciudades(models.Model):
+
+class Ciudad(models.Model):
+
     id_ciudad = models.AutoField(primary_key=True)
-    nombre    = models.CharField(max_length = 30, choices=CIUDADES_OPT, unique = True)
+    nombre = models.CharField(max_length=40, choices=CIUDADES_OPT, unique=True)
+
+    def __str__(self):
+        return f"{self.get_nombre_display()}"
+    
