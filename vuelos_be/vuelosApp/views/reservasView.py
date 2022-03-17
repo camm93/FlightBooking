@@ -1,25 +1,27 @@
-from django.conf                        import settings
-from rest_framework                     import generics, status
-from rest_framework.response            import Response
-from rest_framework_simplejwt.backends  import TokenBackend
-from rest_framework.permissions         import IsAuthenticated
+from django.conf import settings
+from rest_framework import generics, status
+from rest_framework.response import Response
+from rest_framework_simplejwt.backends import TokenBackend
+from rest_framework.permissions import IsAuthenticated
 
-from vuelosApp.models.reservas import Reservas
-from vuelosApp.models.user     import User
-from vuelosApp.serializers.reservasSerializer import ReservaSerializer
+from vuelosApp.models.reserva import Reserva
+from vuelosApp.serializers.reservaSerializer import ReservaSerializer
+from vuelosApp.app_business_logic import FlightBooking
+
+from drf_yasg.utils import swagger_auto_schema
 
 
 class ReservaCreateView(generics.CreateAPIView):
+    """Makes a flight reservation after user authentication.
+    """
     serializer_class = ReservaSerializer
     permission_classes = (IsAuthenticated,)
 
+    @swagger_auto_schema(operation_summary="Make a reservation.")
     def post(self, request, *args, **kwargs):
         token = request.META.get('HTTP_AUTHORIZATION')[7:]
         tokenBackend = TokenBackend(algorithm=settings.SIMPLE_JWT['ALGORITHM'])
         valid_data = tokenBackend.decode(token,verify=False)
-        #print(valid_data['user_id'])
-        #print(valid_data)
-        #print(request.data)
         
         if "cliente" not in request.data:
             stringResponse = {"Error": "'cliente' is not in request.data"}
@@ -29,17 +31,20 @@ class ReservaCreateView(generics.CreateAPIView):
             stringResponse = {'detail':'Unauthorized Request'}
             return Response(stringResponse, status=status.HTTP_401_UNAUTHORIZED)
         
-        serializer = ReservaSerializer(data = request.data)
+        serializer = self.serializer_class(data=request.data)
 
-        serializer.is_valid(raise_exception = True)
-        serializer.save()
-        print(serializer.data)
+        if serializer.is_valid():
+            serializer.save()
+            puestos = serializer.data.get("puestos")
+            vuelo_id = serializer.data.get("vuelo")
+            FlightBooking.reserve_seats(vuelo_id=vuelo_id, puestos=puestos)
+            return Response("Reservation Successful", status=status.HTTP_201_CREATED)
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response("Reserva exitosa", status=status.HTTP_201_CREATED)
 
-
-class ReservaFilteredView(generics.ListAPIView):
-    queryset = Reservas.objects.all()
+class ReservaListView(generics.ListAPIView):
+    """Lists all reservations of a given user. Authentication required.
+    """
     serializer_class = ReservaSerializer
     permission_classes = (IsAuthenticated,)
 
@@ -52,14 +57,18 @@ class ReservaFilteredView(generics.ListAPIView):
             stringResponse = {'detail':'Unauthorized Request'}
             return Response(stringResponse, status=status.HTTP_401_UNAUTHORIZED)
         
-        queryset = Reservas.objects.filter(cliente = self.kwargs["user"])
+        queryset = Reserva.objects.filter(cliente=self.kwargs["user"])
         return queryset
 
 
 class ReservaDeleteView(generics.DestroyAPIView):
-    queryset = Reservas.objects.all()
+    """Deletes a flight reservation after user authentication.
+    """
+    queryset = Reserva.objects.all()
     serializer_class = ReservaSerializer
     permission_classes = (IsAuthenticated,)
+
+    @swagger_auto_schema(operation_summary="Delete a reservation.")
     def delete(self, request, *args, **kwargs):
         token = request.META.get('HTTP_AUTHORIZATION')[7:]
         tokenBackend = TokenBackend(algorithm=settings.SIMPLE_JWT['ALGORITHM'])
@@ -68,17 +77,19 @@ class ReservaDeleteView(generics.DestroyAPIView):
         if valid_data["user_id"] != kwargs['user']:
             stringResponse = {'detail':'Unauthorized Request'}
             return Response(stringResponse, status=status.HTTP_401_UNAUTHORIZED)
+        FlightBooking.remove_reservation(reserva_id=self.kwargs["pk"])
         return super().destroy(request, *args, **kwargs)
 
 
 class ReservaUpdateView(generics.UpdateAPIView):
-    """Sólamente implementadas y utilizadas desde el back"""
-    queryset = Reservas.objects.all()
+    """Updates the number of seats on a given reservation. Requires authentication.
+    """
+    queryset = Reserva.objects.all()
     serializer_class = ReservaSerializer
-    """   
     permission_classes = (IsAuthenticated,)
 
-    def put(self, request, *args, **kwargs):
+    @swagger_auto_schema(operation_summary="Patch a reservation (Number of seats).")
+    def patch(self, request, *args, **kwargs):
         token = request.META.get('HTTP_AUTHORIZATION')[7:]
         tokenBackend = TokenBackend(algorithm=settings.SIMPLE_JWT['ALGORITHM'])
         valid_data = tokenBackend.decode(token,verify=False)
@@ -86,28 +97,8 @@ class ReservaUpdateView(generics.UpdateAPIView):
         if valid_data["user_id"] != kwargs['user']:
             stringResponse = {'detail':'Unauthorized Request'}
             return Response(stringResponse, status=status.HTTP_401_UNAUTHORIZED)
-        return super().update(request, *args, **kwargs)        
-    """
+        
+        FlightBooking.update_seats(reserva_id=self.kwargs["pk"], new_puestos=request.data["puestos"]) 
+        return super().partial_update(request, *args, **kwargs)        
 
-
-class ReservaRetrieveView(generics.RetrieveAPIView):
-    """ Esta vista consulta una reserva basado en su pk
-        No implementada en el front.
-        Sólo para revisión en el back
-    """
-    queryset = Reservas.objects.all()
-    serializer_class = ReservaSerializer
-    """permission_classes = (IsAuthenticated,)
-
-    def get(self, request, *args, **kwargs):
-        token = self.request.META.get('HTTP_AUTHORIZATION')[7:]
-        tokenBackend = TokenBackend(algorithm=settings.SIMPLE_JWT['ALGORITHM'])
-        valid_data = tokenBackend.decode(token,verify=False)
-
-        if valid_data["user_id"] != self.kwargs['user']:
-            stringResponse = {'detail':'Unauthorized Request'}
-            return Response(stringResponse, status=status.HTTP_401_UNAUTHORIZED)
-
-        return super().get(request, *args, **kwargs)
-    """
 
