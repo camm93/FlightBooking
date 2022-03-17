@@ -10,7 +10,7 @@ class Reserva(models.Model):
     fecha = models.DateField(auto_now_add=True, blank=True)                    
     last_updated = models.DateTimeField(auto_now=True,      
                                         blank=True)                    
-    puestos = models.IntegerField(default=1, blank=False)                                
+    puestos = models.IntegerField(null=False, blank=False)                                
     vuelo = models.ForeignKey(Vuelo, related_name="reserva_vuelo",             
                               on_delete=CASCADE)
     cliente = models.ForeignKey(User, related_name="reserva_user",      
