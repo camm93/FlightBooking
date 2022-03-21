@@ -29,7 +29,8 @@ urlpatterns = [
     path('user/', views.UserCreateView.as_view()),                      # Registro de usuario (User Sign-Up)
     path('user/<int:pk>', views.UserDetailView.as_view()),              # Detalles del usuario
 
-    path('vuelos/create/', views.VueloListView.as_view()),              # Registra un vuelo y lista todos los existentes (AdminUser)
+    path('vuelos/create/', views.VueloCreateView.as_view()),            # Crea un vuelo nuevo (AdminUser)
+    path('vuelos/list/', views.VueloListView.as_view()),                # Lista todos los vuelos existentes.
     path('vuelos/manage/<int:pk>', views.VueloExtraView.as_view()),     # Funcionalidades extra (AdminUser)
     path('vuelos/i/<int:pk>', views.VueloDetailView.as_view()),         # Consulta un vuelo por ID
     path('vuelos/d/<int:ciudad_d>', views.DestinoFilteredView.as_view(), name="vuelos_by_destino"),     # Consulta de vuelos filtrada por ciudad de destino
@@ -40,10 +41,11 @@ urlpatterns = [
     path('reserva/update/<int:user>/<int:pk>', views.ReservaUpdateView.as_view()),  # Actualiza la cantidad de puestos en una reserva.
     path('reserva/remove/<int:user>/<int:pk>', views.ReservaDeleteView.as_view()),  # Elimina una reserva.
 
-    path('ciudad/', views.CiudadList.as_view()),                                    # Lista todas las ciudades o crea una nueva (AdminUser)
-    path('ciudad/<int:pk>', views.CiudadDetail.as_view()),                          # Consulta una ciudad, la actualiza o la elimina (AdminUser)
+    path('ciudad/create/', views.CiudadCreate.as_view()),                                    # Crea una nueva ciudad(AdminUser)
+    path('ciudad/list/', views.CiudadList.as_view()),                                 # Lista todas las ciudades existentes
+    path('ciudad/<int:pk>', views.CiudadDetail.as_view()),                            # Consulta una ciudad, la actualiza o la elimina (AdminUser)
 
     path('swagger<format>.json|.yaml', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path('redocs/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]
