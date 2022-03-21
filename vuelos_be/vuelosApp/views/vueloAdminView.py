@@ -41,10 +41,16 @@ class VueloExtraView(views.APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class VueloListView(generics.ListCreateAPIView):
-    """Lists all existing flights.
-    Creates a new flight. AdminUsers Only.
+class VueloCreateView(generics.CreateAPIView):
+    """Creates a new flight. AdminUsers Only.
     """    
     queryset = Vuelo.objects.all()
     serializer_class = VueloSerializer
     permission_classes = [IsAdminUser]
+
+
+class VueloListView(generics.ListAPIView):
+    """Lists all existing flights.
+    """    
+    queryset = Vuelo.objects.all()
+    serializer_class = VueloSerializer

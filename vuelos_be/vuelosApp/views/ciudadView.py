@@ -4,16 +4,24 @@ from rest_framework import generics
 from rest_framework.permissions import IsAdminUser
 
 
-class CiudadList(generics.ListCreateAPIView):
-    """Allows to create new cities and list all existing ones.
+class CiudadCreate(generics.CreateAPIView):
+    """Allows to create new cities.
     """
     queryset = Ciudad.objects.all()
     serializer_class = CiudadSerializer
     permission_classes = [IsAdminUser]
 
 
+class CiudadList(generics.ListAPIView):
+    """Lists all existing cities.
+    """
+    queryset = Ciudad.objects.all()
+    serializer_class = CiudadSerializer
+
+
 class CiudadDetail(generics.RetrieveUpdateDestroyAPIView):
-    """Retrieve, Update or Delete a city."""
+    """Retrieve, Update or Delete a city. For admin users only.
+    """
     queryset = Ciudad.objects.all()
     serializer_class = CiudadSerializer
     permission_classes = [IsAdminUser]
