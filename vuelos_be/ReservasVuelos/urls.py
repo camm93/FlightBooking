@@ -1,30 +1,49 @@
-
+from django.contrib import admin
 from django.urls import path
-from rest_framework.fields import URLField
 from rest_framework_simplejwt.views import (TokenObtainPairView, TokenRefreshView)
 from vuelosApp import views
 
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Flight Booking API",
+      default_version='v1',
+      description="A REST API for Flight Ticket Reservation using Django - DRF.",
+      terms_of_service="https://www.google.com/policies/terms/",
+      contact=openapi.Contact(email="camm93@gmail.com"),
+   ),
+   public=True,
+   permission_classes=[permissions.AllowAny],
+)
+
+
 urlpatterns = [
-    #path('admin/', admin.site.urls),
-    path('refresh/', TokenRefreshView.as_view()),           # renovar el access token http://localhost:8000/refresh/     # Esta vista ya viene implementada en el paquete de django framework
-    path('login/', TokenObtainPairView.as_view()),          # iniciar sesión http://localhost:8000/login/                # Esta vista ya viene implementada en el paquete de django framework
+    path('admin/', admin.site.urls),
+    path('refresh/', TokenRefreshView.as_view()),                       # Renovar el access token. Built-in view
+    path('login/', TokenObtainPairView.as_view()),                      # Iniciar sesión. Built-in view.
 
-    path('user/', views.UserCreateView.as_view()),          # registra usuario http://localhost:8000/user/                              # Esta vista se implementa desde cero
-    path('user/<int:pk>', views.UserDetailView.as_view()),  # obtener la info de un usuario http://localhost:8000/user/<int:pk>/        # Esta vista se implementa desde cero
+    path('user/', views.UserCreateView.as_view()),                      # Registro de usuario (User Sign-Up)
+    path('user/<int:pk>', views.UserDetailView.as_view()),              # Detalles del usuario
 
-    path('vuelos/create/', views.VueloListView.as_view()),          # registra un vuelo y lista todos http://localhost:8000/vuelo/                         # Esta vista se implementa desde cero
-    path('vuelos/i/<int:pk>', views.VueloDetailView.as_view()),# consulta, actualiza o elimina un vuelo http://localhost:8000/vuelo/<int:pk>/         # Esta vista se implementa desde cero
-    path('vuelos/d/<int:ciudad_d>', views.DestinoFilteredView.as_view(), name = "filtro_destino"), # consulta vuelos de acuerdo con el id de la ciudad de destino
-    path('vuelos/o/<int:ciudad_o>', views.OrigenFilteredView.as_view(), name="filtro_origen"), # consulta vuelos de acuerdo con el id de la ciudad de destino
+    path('vuelos/create/', views.VueloListView.as_view()),              # Registra un vuelo y lista todos los existentes (AdminUser)
+    path('vuelos/manage/<int:pk>', views.VueloExtraView.as_view()),     # Funcionalidades extra (AdminUser)
+    path('vuelos/i/<int:pk>', views.VueloDetailView.as_view()),         # Consulta un vuelo por ID
+    path('vuelos/d/<int:ciudad_d>', views.DestinoFilteredView.as_view(), name="vuelos_by_destino"),     # Consulta de vuelos filtrada por ciudad de destino
+    path('vuelos/o/<int:ciudad_o>', views.OrigenFilteredView.as_view(), name="vuelos_by_origen"),       # Consulta de vuelos filtrada por ciudad de origen
 
-    path('reserva/create/', views.ReservaCreateView.as_view()),            # registra una reserva y lista todas http://localhost:8000/reserva/                      # utilizando generics
-    path('reserva/<int:pk>', views.ReservaRetrieveView.as_view()),  # consulta, actualiza o elimina una reserva http://localhost:8000/reserva/<int:pk>/      # utilizando generics
-    path('reserva/list/<int:user>', views.ReservaFilteredView.as_view()),  # consulta, actualiza o elimina una reserva http://localhost:8000/reserva/<int:pk>/      # utilizando generics
-    path('reserva/update/<int:user>/<int:pk>', views.ReservaUpdateView.as_view()),
-    path('reserva/remove/<int:user>/<int:pk>', views.ReservaDeleteView.as_view()),
+    path('reserva/create/', views.ReservaCreateView.as_view()),                     # Registra una reserva del usuario
+    path('reserva/list/<int:user>', views.ReservaListView.as_view()),               # Consulta todas las reservas del usuario.
+    path('reserva/update/<int:user>/<int:pk>', views.ReservaUpdateView.as_view()),  # Actualiza la cantidad de puestos en una reserva.
+    path('reserva/remove/<int:user>/<int:pk>', views.ReservaDeleteView.as_view()),  # Elimina una reserva.
 
-    path('ciudad/', views.CiudadList.as_view()),            # registra una ciudad y lista todas http://localhost:8000/ciudad/                      # utilizando generics
-    path('ciudad/<int:pk>', views.CiudadDetail.as_view()),  # consulta, actualiza o elimina una ciudad http://localhost:8000/ciudad/<int:pk>/      # utilizando generics
-    
-    
+    path('ciudad/', views.CiudadList.as_view()),                                    # Lista todas las ciudades o crea una nueva (AdminUser)
+    path('ciudad/<int:pk>', views.CiudadDetail.as_view()),                          # Consulta una ciudad, la actualiza o la elimina (AdminUser)
+
+    path('swagger<format>.json|.yaml', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]

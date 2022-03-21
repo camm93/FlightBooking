@@ -14,7 +14,6 @@ from drf_yasg.utils import swagger_auto_schema
 class UserCreateView(views.APIView):
     """Creates user.
     """
-    
     @swagger_auto_schema(operation_summary="Create a user account.")
     def post(self, request, *args, **kwargs):
         serializer = UserSerializer(data=request.data)

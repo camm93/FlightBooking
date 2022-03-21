@@ -76,7 +76,7 @@ export default {
       await this.verifyToken();
 
       let token = localStorage.getItem("token_access");
-      let userId = jwt_decode(token).user_id.toString(); // id_user o user_id
+      let userId = jwt_decode(token).user_id.toString(); // user_id
 
       //axios.get(`http://127.0.0.1:8000/reserva/list/${userId}`, {
       axios.get(`https://mintic-vuelos-be.herokuapp.com/reserva/list/${userId}`, {
