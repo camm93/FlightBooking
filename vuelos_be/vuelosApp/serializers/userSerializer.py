@@ -25,6 +25,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         tarjetaData = validated_data.pop('tarjeta')
+        if not tarjetaData.get("nombre_propietario"):
+            tarjetaData["nombre_propietario"] = f"{validated_data.get('first_name')} {validated_data.get('last_name')}"
         userInstance = User.objects.create(**validated_data)
         Tarjeta.objects.create(cliente=userInstance, **tarjetaData)
         return userInstance
