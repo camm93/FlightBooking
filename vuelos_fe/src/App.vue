@@ -1,12 +1,10 @@
 <template>
   <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Tus vuelos</title>
 
-    <!-- CSS -->
     <link rel="shortcut icon" href="./assets/avion.png" type="image/x-icon" />
   </head>
 
@@ -154,7 +152,7 @@
           <h5 class="text-uppercase">Disclaimer</h5>
 
           <p>
-            TusVuelos is not responsible for content on external Web sites.
+            TusVuelos is not responsible for content on external Websites.
             © 2021 TusVuelos, a flight-booking website. All rights reserved. 
             TusVuelos and the Airplane Logo are not registered trademarks. 
             This website is not meant for commercial but academic purposes.
@@ -162,36 +160,19 @@
         </div>
         <!--Grid column-->
 
-        <!--Grid column-->
         <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
           <h5 class="text-uppercase">Designed by</h5>
 
-          <p>
-            <ul>
-              <li>
-                Cristian Murillo
-              </li>
-              <li>
-                Royer Muñoz
-              </li>
-              <li>
-                Steven Navarro
-              </li>
-            </ul>
+          <p id="author">
+            Cristian Murillo
           </p>
         </div>
-        <!--Grid column-->
       </div>
-      <!--Grid row-->
     </div>
-    <!-- Grid container -->
-
-    <!-- Copyright -->
     <div class="text-center p-3" id="bootstrap" style="background-color: rgba(0, 0, 0, 0.2)">
-      © 2020 Copyright:
+      © 2022 Copyright:
       <a class="text-dark" href="https://mdbootstrap.com/">MDBootstrap.com</a>
     </div>
-    <!-- Copyright -->
   </footer>
 </template>
 
@@ -279,5 +260,15 @@ export default {
 
 #bootstrap{
   margin: 10px;
+}
+
+#author{
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  margin: 35px;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 25px;
+  font-weight: bold;
 }
 </style>
