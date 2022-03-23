@@ -1,7 +1,6 @@
 
 <template>
   
-  <!-- Modal -->
   <div
     class="modal fade "
     id="exampleModalVuelos"
@@ -102,30 +101,31 @@
               <table class="table table-hover table-bordered table-responsive" >
                 <thead>
                   <tr>
-                    <th scope="col">ID Vuelo</th>
+                    <th scope="col">Vuelo</th>
                     <th scope="col">Compañía</th>
                     <th scope="col">Destino</th>
                     <th scope="col">Origen</th>
-                    <th scope="col">Fecha de salida</th>
-                    <th scope="col">Fecha de llegada</th>
-                    <th scope="col">Precio</th>
+                    <th scope="col">Fecha salida (UTC)</th>
+                    <th scope="col">Fecha llegada (UTC)</th>
+                    <th scope="col">Precio ($)</th>
                     <th scope="col">Estado</th>
                     <th scope="col">Capacidad</th>
+                    <th scope="col">Puestos</th>
                     <th scope="col">Check</th>
                   </tr>
                 </thead>
                 <tbody id="myList">
-                  <tr v-for="(ivuelo, index) in vueloEncontrados" :key="index" >
-                    
-                    <td v-text="ivuelo.id_vuelo"></td>
+                  <tr v-for="(ivuelo, index) in vueloEncontrados" :key="index">           
+                    <td v-text="ivuelo.id_vuelo" ></td>
                     <td v-text="ivuelo.company"></td>
-                    <td v-text="ivuelo.Destino_tx"></td>
-                    <td v-text="ivuelo.Origen_tx"></td>
+                    <td v-text="ivuelo.destino"></td>
+                    <td v-text="ivuelo.origen"></td>
                     <td v-text="ivuelo.fecha_salida"></td>
                     <td v-text="ivuelo.fecha_llegada"></td>
                     <td v-text="ivuelo.precio"></td>
-                    <td v-text="ivuelo.Estado_tx"></td>
+                    <td v-text="ivuelo.estado"></td>
                     <td v-text="ivuelo.cupos"></td>
+                    <td> <input type="number" id="puestos" v-model="infoReserva.puestos" min="1"></td>
                     <td> <input class="form-check-input" type="radio" name="reservarRadioOptions" v-on:click="infoReserva.vuelo=ivuelo.id_vuelo"
                     onclick="document.getElementById('btnReserve').disabled = false;"></td>
                   </tr>
@@ -150,7 +150,6 @@
 
 <script>
 
-//import datatable from "datatables.net-bs4"
 import jwt_decode from "jwt-decode";
 import axios from "axios";
 
@@ -161,35 +160,36 @@ export default {
     return {
       selectedCity1: null,
       selectedCity2: null,
-      filtro       : null,
+      filtro: null,
       cities: [
-        { value: 1,  text: "Amazonía" },
-        { value: 2,  text: "Barranquilla" },
-        { value: 3,  text: "Bogotá" },
-        { value: 4,  text: "Bucaramanga" },
-        { value: 5,  text: "Cali" },
-        { value: 6,  text: "Cartagena" },
-        { value: 7,  text: "Cúcuta" },
-        { value: 8,  text: "Ibagué" },
-        { value: 9,  text: "Medellín" },
-        { value: 10, text: "Neiva" },
-        { value: 11, text: "Pamplona" },
-        { value: 12, text: "Quibdó" },
-        { value: 13, text: "Risaralda" },
-        { value: 14, text: "San Andrés" },
-        { value: 15, text: "Villavicencio" },
+        {value: 1, text: "Amazonía"},
+        {value: 2, text: "Barranquilla"},
+        {value: 3, text: "Bogotá"},
+        {value: 4, text: "Bucaramanga"},
+        {value: 5, text: "Cali"},
+        {value: 6, text: "Cartagena"},
+        {value: 7, text: "Cúcuta"},
+        {value: 8, text: "Ibagué"},
+        {value: 9, text: "Medellín"},
+        {value: 10, text: "Neiva"},
+        {value: 11, text: "Pamplona"},
+        {value: 12, text: "Quibdó"},
+        {value: 13, text: "Risaralda"},
+        {value: 14, text: "San Andrés"},
+        {value: 15, text: "Villavicencio"},
       ],
-      id_vuelo            : "",
-      vueloEncontrados    : [],
-      infoReserva         : {
-        vuelo             : null,
-        cliente           : 0,
+      id_vuelo : "",
+      vueloEncontrados : [],
+      infoReserva : {
+        vuelo : null,
+        cliente : 0,
+        puestos : 1
       },
       estados: 
-        {"A": "Activo" ,
-         "C": "Cancelado" ,
-         "F": "Finalizado" ,
-         "R": "Retrasado" },  
+        {"A": "Activo",
+         "C": "Cancelado",
+         "F": "Finalizado",
+         "R": "Retrasado"},  
       username: null,   
     };
   },
@@ -197,41 +197,29 @@ export default {
   methods: {
     
     processSearch: function () {
-      let url_filtro     = this.filtro        || "";
-      //console.log(this.infoReserva.vuelo)
-
+      let url_filtro = this.filtro || "";
       let pk = this.returnPk()
 
-      //this.username = localStorage.getItem("username") || null,
-      //console.log(this.username)
-
-      //console.log(`http://127.0.0.1:8000/vuelos/${url_filtro}/${pk}`)
-
-      //axios.get(`http://127.0.0.1:8000/vuelos/${url_filtro}/${pk}`, {
-      axios.get(`https://mintic-vuelos-be.herokuapp.com/vuelos/${url_filtro}/${pk}`, {
-          headers: {},
-        })
+      axios.get(`vuelos/${url_filtro}/${pk}`, {
+        headers: {},
+      })
         .then((result) => {
           let input = result.data
           this.vueloEncontrados = input;
-          //console.log(this.vueloEncontrados)
-          let iEstados = this.getValues(input, "estado")
-          let iOrigen  = this.getValues(input, "origen")
-          let iDestino = this.getValues(input, "destino")
-
-          this.setValues(iEstados, iOrigen, iDestino)         
-          console.log(this.vueloEncontrados)
+          let raw_fields = ["estado", "origen", "destino", "fecha_llegada", "fecha_salida"]
+          let proc_fields = this.getValues(input, raw_fields)
+          let proc_dates = this.datetimeformat(proc_fields.slice(-2))
+          this.setValues(proc_fields.slice(0, -2), proc_dates)
         })
         .catch((error) => {
           console.log(error);
           if(error.response.status == "500"){
             alert("ERROR: La plataforma está presentando problemas. \nIntente de nuevo más tarde.");
           }
-          
         });
     },
+
     processReserve: async function () {
-      console.log(this.infoReserva.vuelo)
       if (
         localStorage.getItem("token_access") === null ||
         localStorage.getItem("token_refresh") === null
@@ -239,18 +227,15 @@ export default {
         this.$emit("betterLogIn");
         return;
       }
-
       await this.verifyToken();
 
       let token = localStorage.getItem("token_access");
       this.infoReserva.cliente = jwt_decode(token).user_id.toString(); // id_user o user_id
-      //console.log(this.infoReserva)
 
-      //axios.post("http://127.0.0.1:8000/reserva/create/",
-      axios.post("https://mintic-vuelos-be.herokuapp.com/reserva/create/",
-          this.infoReserva,
-          { headers: { Authorization: `Bearer ${token}` } } // por aquí se puede enviar la metadata
-        )
+      axios.post("reserva/create/",
+        this.infoReserva,
+        { headers: { Authorization: `Bearer ${token}` } } // por aquí se puede enviar la metadata
+      )
         .then(() => {
           this.$emit("completedReservation");
         }
@@ -258,16 +243,14 @@ export default {
         .catch(() => {
           this.$emit("logOut");
         })
-
     },
+
     verifyToken: async function () {
       return (
-        //axios.post("http://127.0.0.1:8000/refresh/",
-        axios.post("https://mintic-vuelos-be.herokuapp.com/refresh/",
-
-            { refresh: localStorage.getItem("token_refresh") },
-            { headers: {} }
-          )
+        axios.post("refresh/",
+          { refresh: localStorage.getItem("token_refresh") },
+          { headers: {} }
+        )
           .then((result) => {
             localStorage.setItem("token_access", result.data.access);
           })
@@ -276,6 +259,7 @@ export default {
           })
       );
     },
+    
     returnPk: function () {
       if (this.filtro == "d"){
         return this.selectedCity1;}
@@ -286,34 +270,51 @@ export default {
       else { alert("El atributo this.filtro está tomando un valor inválido")
         console.log(`Atributo this.filtro tiene valor inválido ${this.filtro}`)
       }
-      },
-    getValues: function (input, field) {
-      let output = input.map(a => a[field]);
-      return output
-      }, 
-    setValues: function (input1, input2, input3) {
-      for(var i = 0; i < input1.length; i++){
-        this.vueloEncontrados[i]["Estado_tx"] = this.estados[input1[i]];
-        this.vueloEncontrados[i]["Origen_tx"] = this.cities[input2[i]-1]["text"];
-        this.vueloEncontrados[i]["Destino_tx"] = this.cities[input3[i]-1]["text"];
+    },
+    
+    getValues: function (input, fields) {
+      let output = []
+      for(var i=0; i < fields.length; i++){
+        output.push(input.map(a => a[fields[i]]));
       }
-      }, 
+      return output
+    }, 
+
+    datetimeformat: function (dtArray){
+      for(var i=0; i < dtArray.length; i++){
+        dtArray[i] = dtArray[i].map((element) => {
+          return new Date(element).toUTCString().slice(5, -4)  // to remove " GMT" from dates
+        })
+      }
+      return dtArray
+    },
+    
+    setValues: function (fields, dates) {
+      const [estado, origen, destino] = fields
+      const [llegada, salida] = dates
+
+      for(var i = 0; i < estado.length; i++){
+        this.vueloEncontrados[i]["estado"] = this.estados[estado[i]];
+        this.vueloEncontrados[i]["origen"] = this.cities[origen[i]-1]["text"];
+        this.vueloEncontrados[i]["destino"] = this.cities[destino[i]-1]["text"];
+        this.vueloEncontrados[i]["fecha_llegada"] = llegada[i];
+        this.vueloEncontrados[i]["fecha_salida"] = salida[i];
+      }
+    }, 
+
     clearFields: function () {
       this.selectedCity1 = null;
       this.selectedCity2 = null;
       this.id_vuelo = "";
       this.vueloEncontrados= [];
       this.infoReserva.vuelo = null;
+      this.infoReserva.puestos = 1;
       this.radioBtn = false;
     },
   },
-
-  
 };
 
 </script>
-
-
 
 <style scoped>
 #chooseFilter{
@@ -328,12 +329,11 @@ export default {
 }
 h6{
   font-size: 22px;
-
   width: 100%;  
   justify-content: center;
 }
 .modal-body {
-    overflow : auto;
+  overflow : auto;
 }
 #btnSearch{
   margin: 1% 15%;
@@ -341,6 +341,9 @@ h6{
 }
 #btnReserve{
   width: 20%;
+}
+input[type=number] {
+  width: 3.5em;
 }
 </style>
 

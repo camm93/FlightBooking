@@ -1,5 +1,4 @@
 <template>
-  <!-- Modal -->
   <div
     class="modal fade"
     id="exampleModal"
@@ -27,7 +26,7 @@
               >
               <input
                 type="text"
-                v-model="user.nombres"
+                v-model="user.first_name"
                 class="form-control"
                 id="formGroupExampleInput"
                 placeholder="Ingresa tu nombre"
@@ -40,7 +39,7 @@
               >
               <input
                 type="text"
-                v-model="user.apellidos"
+                v-model="user.last_name"
                 class="form-control"
                 id="formGroupExampleInput2"
                 placeholder="Ingresa tus apellidos"
@@ -78,7 +77,7 @@
                 >Correo electrónico</label>
               <input
                 type="text"
-                v-model="user.correo"
+                v-model="user.email"
                 class="form-control"
                 id="formGroupExampleInput5"
                 placeholder="Ingresa tu correo electrónico"
@@ -91,7 +90,7 @@
               >
               <input
                 type="text"
-                v-model="user.tarjetas.nombre_propietario"
+                v-model="user.tarjeta.nombre_propietario"
                 class="form-control"
                 id="formGroupExampleInput6"
                 placeholder="Ingresa nombre y apellido"
@@ -109,11 +108,11 @@
 
             <div class="mb-3">
               <label for="formGroupExampleInput8" class="form-label"
-                >Código</label
+                >Código (3 dígitos)</label
               >
               <input
-                type="number"
-                v-model="user.tarjetas.codigo"
+                type="text" maxlength="3"
+                v-model="user.tarjeta.codigo"
                 class="form-control"
                 id="formGroupExampleInput8"
                 placeholder="Ingresa el código único de tu tarjeta"
@@ -126,7 +125,7 @@
               >
               <input
                 type="date"
-                v-model="user.tarjetas.fecha_vencimiento"
+                v-model="user.tarjeta.fecha_vencimiento"
                 class="form-control"
                 id="formGroupExampleInput9"
                 placeholder="Ingresa la fecha en formato YYYY-MM-DD"
@@ -166,16 +165,16 @@ export default {
         { value: "V", text: "Visa" },
       ],
       user: {
-        nombres: "",
-        apellidos: "",
+        first_name: "",
+        last_name: "",
         password: "",
         username: "",
-        correo: "",
+        email: "",
 
-        tarjetas: {
+        tarjeta: {
           nombre_propietario: "",
           tipo: "",
-          codigo: 0,
+          codigo: "000",
           fecha_vencimiento: (new Date()).toJSON().toString(),
         },
       },
@@ -184,13 +183,12 @@ export default {
 
   methods: {
     processSignUp: function () {
-      this.user.tarjetas.tipo = this.selected
+      this.user.tarjeta.tipo = this.selected
 
-      //axios.post("http://127.0.0.1:8000/user/", this.user, {
-      axios.post("https://mintic-vuelos-be.herokuapp.com/user/", this.user, {
-
-          headers: {},
-        })
+      axios.post("user/",
+        this.user, 
+        { headers: {} }
+      )
         .then((result) => {
           let dataSignUp = {
             username: this.user.username,

@@ -1,7 +1,7 @@
 <template>
   <section>
     <div v-if="loaded" class="container">
-      <div class="left"><img src="..\assets\atardecer.png" class="d-block w-100" ></div>
+      <div class="left"><img src="..\assets\user2.png" ></div>
 
       <div class="right">
         <div class="information">
@@ -71,17 +71,16 @@ export default {
       let token = localStorage.getItem("token_access");
       let userId = jwt_decode(token).user_id.toString(); // id_user o user_id
 
-      //axios.get(`http://127.0.0.1:8000/user/${userId}`, {
-      axios.get(`https://mintic-vuelos-be.herokuapp.com/user/${userId}`, {
-          headers: { Authorization: `Bearer ${token}` },
+      axios.get(`user/${userId}`, {
+        headers: {Authorization: `Bearer ${token}`}
         })
         .then((result) => {
-          this.nombres = result.data.nombres;
-          this.apellidos = result.data.apellidos;
-          this.correo = result.data.correo;
-          this.id_tarjetas = result.data.tarjetas.id_tarjeta;
-          this.nombre_propietario = result.data.tarjetas.nombre_propietario;
-          this.tipo = result.data.tarjetas.tipo;
+          this.nombres = result.data.first_name;
+          this.apellidos = result.data.last_name;
+          this.correo = result.data.email;
+          this.id_tarjetas = result.data.tarjeta.id_tarjeta;
+          this.nombre_propietario = result.data.tarjeta.nombre_propietario;
+          this.tipo = result.data.tarjeta.tipo;
           this.loaded = true;
           this.tipo_text = this.options[this.tipo];
         })
@@ -92,9 +91,7 @@ export default {
 
     verifyToken: function () {
       return (
-        //axios.post("http://127.0.0.1:8000/refresh/",
-        axios.post("https://mintic-vuelos-be.herokuapp.com/refresh/",
-
+        axios.post("refresh/",
             { refresh: localStorage.getItem("token_refresh") },
             { headers: {} }
           )
@@ -121,45 +118,48 @@ export default {
   box-sizing: border-box;
 }
 section{
-  
   justify-content: center;
   align-items: center;
-
 }
 .container{
   width: 100%;
-  margin: 0 auto;
+  margin: 10px auto;
   display:flex;
   justify-content: center;
   align-items:center ;
-  background-color: rgba(141, 140, 140, 0.548);
+  background-color: rgba(141, 140, 140, 0);
   border-radius: 20px;
-
 }
 .left{
-  
   margin: 10px 0px 10px;
-
+}
+.left img{
+  height: 300px;
+  width: 250px;
 }
 .right{
-  width: 100%;
+  width: 90%;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 10px;
+  border-style: double;
+  border-width: thick;
+  border-color: rgb(74, 135, 248);
   padding: auto;
   margin: auto 10px;
-  background-color: #283747;
-  color: white;
+  background-color: #e1e8f1;
+  color: rgb(8, 1, 1);
   font-family: serif;
 }
 .right h1{
   font-size: 35px;
-  font-weight: lighter;
+  font-weight: bold;
+  color: black;
 }
 .right h2{
   font-size: 25px;
-
+  color: rgb(13, 13, 41);
 }
 
 </style>

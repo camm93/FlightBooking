@@ -72,16 +72,11 @@ export default {
   },
 
   methods: {
-    // pendiente
-    // completada
-    // rechazada
 
     processLogInUser: function(){
-      //axios.post("http://127.0.0.1:8000/login/",
-      axios.post("https://mintic-vuelos-be.herokuapp.com/login/",
+      axios.post("login/",
           this.user,
-          // "también se le puede enviar un mensaje"
-          { headers: {} } // por aquí se puede enviar la metadata
+          { headers: {} }
         )
         .then((result) => {
           let dataLogIn = {

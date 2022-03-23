@@ -23,25 +23,30 @@
             <tr>
               <th scope="col">ID de la reserva</th>
               <th scope="col">Fecha de reserva</th>
-              <th scope="col">Última Modificación</th>
+              <th scope="col">Última Modificación (UTC)</th>
               <th scope="col">Número de Vuelo</th>
-              <th scope="col">Selección</th>
+              <th scope="col">Puestos</th>
+              <th scope="col">Eliminar</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(ivuelo, index) in vueloEncontrados" :key="index">
-              <td v-text="ivuelo.id_reservas"></td>
+              <td v-text="ivuelo.id_reserva"></td>
               <td v-text="ivuelo.fecha"></td>
               <td v-text="ivuelo.last_updated"></td>
               <td v-text="ivuelo.vuelo"></td>
-              <td> <input class="form-check-input" type="radio" name="modificarRadioOptions" v-on:click="infoReserva=ivuelo.id_reservas"
+              <td> <input type="number" id="puestos" v-model="ivuelo.puestos" min="1" max="10" v-on:change="reservaUpdate(index)"> </td>
+              <td> <input class="form-check-input" type="radio" name="modificarRadioOptions" v-on:click="deleteReservaId=ivuelo.id_reserva"
                     onclick="document.getElementById('btnDelete').disabled = false;"></td>
             </tr>
           </tbody>
         </table>
-        <div align="right"> 
-          <button v-on:click="processDelete" id="btnDelete" class="btn btn-primary btn-md" disabled>        
+        <div align="center"> 
+            <button v-on:click="processUpdate" id="btnUpdate" class="btn btn-primary btn-md" disabled>        
+            Actualizar Reservación </button>           
+            <button v-on:click="processDelete" id="btnDelete" class="btn btn-primary btn-md" disabled>        
             Eliminar Reservación </button> 
+
         </div>
       </div>
     </div>
@@ -56,64 +61,68 @@ export default {
   name: "Reservas",
   data: function () {
     return {
-      username          : localStorage.getItem("username") || null,
-      loaded            : false,
-      vueloEncontrados  : [],
-      infoReserva       : null,   
+      username : localStorage.getItem("username") || null,
+      loaded : false,
+      vueloEncontrados : [],
+      deleteReservaId : null,
+      infoReserva : null,   
+      infoUpdate : {
+        vuelo: null,
+        cliente: null,
+        puestos: null
+      }
     };
   },
 
   methods: {
     getData: async function () {
-      if (
-        localStorage.getItem("token_access") === null ||
-        localStorage.getItem("token_refresh") === null
-      ) {
-        this.$emit("logOut");
-        return;
-      }
 
-      await this.verifyToken();
+      const [token, userId] = await this.checkTokens()
 
-      let token = localStorage.getItem("token_access");
-      let userId = jwt_decode(token).user_id.toString(); // user_id
-
-      //axios.get(`http://127.0.0.1:8000/reserva/list/${userId}`, {
-      axios.get(`https://mintic-vuelos-be.herokuapp.com/reserva/list/${userId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        //.then(response --> response.json())
+      axios.get(`reserva/list/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
         .then((result) => {
             let input = result.data
-            this.vueloEncontrados = input;       
-            console.log(this.vueloEncontrados)
+            this.vueloEncontrados = input
+            this.datetimeformat(input, "last_updated")
             this.loaded = true;
         })
         .catch(() => {
           this.$emit("logOut");
         });
     },
+    reservaUpdate: function(index){
+      document.getElementById('btnUpdate').disabled = false;
+      this.infoReserva = this.vueloEncontrados[index].id_reserva
+      this.infoUpdate.vuelo = this.vueloEncontrados[index].vuelo
+      this.infoUpdate.puestos = this.vueloEncontrados[index].puestos
+    },
+    processUpdate: async function(){
+
+      const [token, userId] = await this.checkTokens()
+      this.infoUpdate.cliente = userId
+
+      axios.patch(`reserva/update/${userId}/${this.infoReserva}`, 
+        this.infoUpdate,
+        {headers: { Authorization: `Bearer ${token}` },
+      })
+        .then(() => {
+          alert("La reservación ha sido actualizada.")
+           this.getData()
+        })
+        .catch(() => {
+          this.$emit("logOut");
+        });
+
+    },
     processDelete: async function(){
 
-      if (
-        localStorage.getItem("token_access") === null ||
-        localStorage.getItem("token_refresh") === null
-      ) {
-        this.$emit("logOut");
-        return;
-      }
+      const [token, userId] = await this.checkTokens()
 
-      console.log("id_reservas ", this.infoReserva)
-
-      await this.verifyToken();
-
-      let token = localStorage.getItem("token_access");
-      let userId = jwt_decode(token).user_id.toString(); // id_user o user_id
-
-      //axios.delete(`http://127.0.0.1:8000/reserva/remove/${userId}/${this.infoReserva}`, {
-      axios.delete(`https://mintic-vuelos-be.herokuapp.com/reserva/remove/${userId}/${this.infoReserva}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+      axios.delete(`reserva/remove/${userId}/${this.deleteReservaId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
         .then(() => {
           alert("La reservación ha sido eliminada")
            this.getData()
@@ -123,14 +132,28 @@ export default {
         });
 
     },
+    checkTokens: async function() {
+      if (
+        localStorage.getItem("token_access") === null ||
+        localStorage.getItem("token_refresh") === null
+      ) {
+        this.$emit("logOut");
+        return;
+      }
 
+      await this.verifyToken();
+
+      let token = localStorage.getItem("token_access");
+      let userId = jwt_decode(token).user_id.toString(); // id_user o user_id
+
+      return [token, userId]
+    },
     verifyToken: async function () {
       return (
-        //axios.post("http://127.0.0.1:8000/refresh/",
-        axios.post("https://mintic-vuelos-be.herokuapp.com/refresh/",
-            { refresh: localStorage.getItem("token_refresh") },
-            { headers: {} }
-          )
+        axios.post("refresh/",
+          { refresh: localStorage.getItem("token_refresh") },
+          { headers: {} }
+        )
           .then((result) => {
             localStorage.setItem("token_access", result.data.access);
           })
@@ -138,6 +161,17 @@ export default {
             this.$emit("logOut");
           })
       );
+    },
+
+    datetimeformat: function (input, datefield) {
+      let output = input.map((element) => {
+        let a = element[datefield]
+        return new Date(a).toUTCString().slice(0, -4)  // to remove " GMT" from dates
+        })
+
+      for (var i=0; i < output.length; i++){
+        this.vueloEncontrados[i]["last_updated"] = output[i]
+      }
     },
   },
 
@@ -178,7 +212,6 @@ section {
 }
 .table{
     padding: 20px;
-    margin: 0 0 0 0;
     width: 100%;
 }
 h1 {
@@ -188,5 +221,10 @@ h1 {
   display:flex;
   justify-content: center;
 }
-
+#btnUpdate {
+  margin: 0 15% 0 0;
+}
+input[type=number] {
+  width: 3.5em;
+}
 </style>
