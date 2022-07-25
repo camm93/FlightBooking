@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
 from django.contrib.auth.hashers import make_password
 from django.core.validators import MinLengthValidator
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 class UserManager(BaseUserManager):
@@ -44,7 +44,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     id_user = models.BigAutoField(primary_key=True)
     username = models.CharField(
         'Username', validators=[MinLengthValidator(5)], max_length=20, 
-        unique=True, help_text="Username must contain between 5 and 20 characters")
+        unique=True, help_text=_("Username must contain between 5 and 20 characters"))
     first_name = models.CharField("Name", max_length=30)
     last_name = models.CharField("Last_Name", max_length=30)
     password = models.CharField('Password', max_length=256)
@@ -66,4 +66,3 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return "Username: {}, Email: {}".format(
             self.username, self.email)
-

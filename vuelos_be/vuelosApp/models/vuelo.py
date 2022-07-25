@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models.deletion import CASCADE
 from django.utils import timezone
 from .ciudad import Ciudad
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 ESTADOS_OPT = (
@@ -27,12 +27,12 @@ class Vuelo(models.Model):
                               max_length=1, help_text=_("""
                               Seleccione una de los 4 estados posibles del vuelo. 
                               'A' para Activo, 'C' Cancelado, 'F' Finalizado y 'R' Retrasado."""),
-                              default=ESTADOS_OPT[0][0])         
+                              default=ESTADOS_OPT[0][0])
     _cupos = models.PositiveIntegerField(default=50, blank=True)
-    company = models.CharField(max_length=30)                      
-    destino = models.ForeignKey(Ciudad, related_name="vuelos_destino",    
+    company = models.CharField(max_length=30)
+    destino = models.ForeignKey(Ciudad, related_name="vuelos_destino",
                                 on_delete=CASCADE)
-    origen = models.ForeignKey(Ciudad, related_name="vuelos_origen",      
+    origen = models.ForeignKey(Ciudad, related_name="vuelos_origen",
                                on_delete=CASCADE)
 
     @property
@@ -44,5 +44,5 @@ class Vuelo(models.Model):
         self._cupos = cupos
 
     def __str__(self):
-        return "Vuelo ID: %i, Compañía: %s, Origen: %s, Destino: %s" % (self.id_vuelo, 
+        return "Vuelo ID: %i, Compañía: %s, Origen: %s, Destino: %s" % (self.id_vuelo,
                 self.company, self.origen, self.destino)

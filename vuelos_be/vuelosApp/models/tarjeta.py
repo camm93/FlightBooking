@@ -33,4 +33,3 @@ class Tarjeta(models.Model):
     
     def __str__(self):
         return f'<Tarjeta ID: {self.id_tarjeta}, Cliente: {self.cliente}, Tipo: {self.get_tipo_display()}'
-

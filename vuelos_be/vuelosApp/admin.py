@@ -28,7 +28,7 @@ class TarjetaAdmin(admin.ModelAdmin):
 class CiudadAdmin(admin.ModelAdmin):
     list_display = [
         "id_ciudad", "nombre"
-    ] 
+    ]
 
 
 class ReservaAdmin(admin.ModelAdmin):
@@ -42,5 +42,3 @@ admin.site.register(Reserva, ReservaAdmin)
 admin.site.register(Tarjeta, TarjetaAdmin)
 admin.site.register(User, UserAdmin)
 admin.site.register(Vuelo, VueloAdmin)
-
-

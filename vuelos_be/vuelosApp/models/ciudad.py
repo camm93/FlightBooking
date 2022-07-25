@@ -27,4 +27,3 @@ class Ciudad(models.Model):
 
     def __str__(self):
         return f"{self.get_nombre_display()}"
-    
