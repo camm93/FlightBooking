@@ -1,11 +1,11 @@
 from django.http.response import Http404
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status, views, generics
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
+
 from vuelosApp.models.vuelo import Vuelo
 from vuelosApp.serializers.vueloSerializer import VueloSerializer
-from rest_framework.permissions import IsAdminUser
-
-from drf_yasg.utils import swagger_auto_schema
 
 
 class VueloExtraView(views.APIView):
@@ -33,7 +33,7 @@ class VueloExtraView(views.APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
     @swagger_auto_schema(operation_summary="Delete a Flight.")
     def delete(self, request, pk, format=None):
         vuelo = self.get_object(pk)
@@ -43,7 +43,7 @@ class VueloExtraView(views.APIView):
 
 class VueloCreateView(generics.CreateAPIView):
     """Creates a new flight. AdminUsers Only.
-    """    
+    """
     queryset = Vuelo.objects.all()
     serializer_class = VueloSerializer
     permission_classes = [IsAdminUser]
@@ -51,6 +51,6 @@ class VueloCreateView(generics.CreateAPIView):
 
 class VueloListView(generics.ListAPIView):
     """Lists all existing flights.
-    """    
+    """
     queryset = Vuelo.objects.all()
     serializer_class = VueloSerializer

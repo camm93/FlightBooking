@@ -9,4 +9,3 @@ class TarjetaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tarjeta
         fields = ["id_tarjeta","nombre_propietario", "fecha_vencimiento", "codigo", "tipo"]
-

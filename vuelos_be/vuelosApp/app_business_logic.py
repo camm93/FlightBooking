@@ -2,7 +2,7 @@ from vuelosApp.models.reserva import Reserva
 from vuelosApp.models.vuelo import Vuelo
 
 
-class FlightBooking():
+class FlightBooking:
 
     @staticmethod
     def reserve_seats(vuelo_id, puestos):
@@ -14,7 +14,7 @@ class FlightBooking():
     def remove_reservation(reserva_id):
         reserva = Reserva.objects.get(id_reserva=reserva_id)
         vuelo = Vuelo.objects.get(id_vuelo=reserva.vuelo.id_vuelo)
-        vuelo.cupos += reserva.puestos 
+        vuelo.cupos += reserva.puestos
         vuelo.save()
 
     @staticmethod
@@ -24,5 +24,3 @@ class FlightBooking():
         vuelo = Vuelo.objects.get(id_vuelo=reserva.vuelo.id_vuelo)
         vuelo.cupos += (old_puestos - new_puestos)
         vuelo.save()
-    
-

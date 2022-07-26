@@ -1,7 +1,7 @@
-from vuelosApp.models.ciudad import Ciudad
-from vuelosApp.serializers.ciudadSerializer import CiudadSerializer
 from rest_framework import generics
 from rest_framework.permissions import IsAdminUser
+from vuelosApp.models.ciudad import Ciudad
+from vuelosApp.serializers.ciudadSerializer import CiudadSerializer
 
 
 class CiudadCreate(generics.CreateAPIView):
@@ -25,4 +25,3 @@ class CiudadDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Ciudad.objects.all()
     serializer_class = CiudadSerializer
     permission_classes = [IsAdminUser]
-    

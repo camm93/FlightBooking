@@ -1,13 +1,11 @@
 """
-Estas vistas de Vuelos no tienen autenticación, puesto que cualquier
-usuario, incluso no registrados, pueden consultar vuelos.
+These views intentionally lack authentication because all users should be able to search for flights.
 """
-
-
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics
 from vuelosApp.models.vuelo import Vuelo
 from vuelosApp.serializers.vueloSerializer import VueloSerializer
-from drf_yasg.utils import swagger_auto_schema
+
 
 class DestinoFilteredView(generics.ListAPIView):
     """Filters flights by destination.
@@ -31,14 +29,13 @@ class OrigenFilteredView(generics.ListAPIView):
         ciudad_origen = self.request.GET.get("ciudad_o")
         if (ciudad_origen != None or ciudad_origen != ""):
             return Vuelo.objects.filter(origen_id=self.kwargs["ciudad_o"])
-      
-        
+
+
 class VueloDetailView(generics.ListAPIView):
     """Retrieves a flight by Id.
     ListAPIView was intentionally chosen over RetrieveAPIView for improved
     functionality in web component.
     """
-    queryset = Vuelo.objects.all()
     serializer_class = VueloSerializer
 
     @swagger_auto_schema(operation_summary="Retrieve Flight by ID.")

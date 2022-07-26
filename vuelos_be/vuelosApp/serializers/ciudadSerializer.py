@@ -9,4 +9,3 @@ class CiudadSerializer(serializers.ModelSerializer):
     class Meta:
         model  = Ciudad
         fields = ["id_ciudad", "nombre"]
-    

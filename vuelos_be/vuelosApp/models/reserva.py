@@ -17,5 +17,5 @@ class Reserva(models.Model):
                                 on_delete=CASCADE)
 
     def __str__(self):
-        return f'Reserva N° {self.id_reserva}. Cliente: {self.cliente},\
-             Vuelo_ID: {self.vuelo}, Cantidad: {self.puestos}'
+        return f'Reserva N° {self.id_reserva}. Cliente: {self.cliente}, \
+            Vuelo_ID: {self.vuelo}, Cantidad: {self.puestos}'

@@ -5,9 +5,9 @@ from vuelosApp.serializers.tarjetaSerializer import TarjetaSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
-    
+
     tarjeta = TarjetaSerializer()
-    
+
     class Meta:
         model  = User
         fields = ["username", "first_name", "last_name", "password", "email", "tarjeta"]
@@ -16,11 +16,11 @@ class UserSerializer(serializers.ModelSerializer):
         username_exists = User.objects.filter(username=attrs["username"]).exists()
         if username_exists:
             raise serializers.ValidationError(detail="User with username already exists")
-        
+
         email_exists = User.objects.filter(username=attrs["email"]).exists()
         if email_exists:
             raise serializers.ValidationError(detail="User with email already exists")
-            
+
         return super().validate(attrs)
 
     def create(self, validated_data):
@@ -30,10 +30,10 @@ class UserSerializer(serializers.ModelSerializer):
         userInstance = User.objects.create(**validated_data)
         Tarjeta.objects.create(cliente=userInstance, **tarjetaData)
         return userInstance
-    
-    def to_representation(self, instance):  # lo que se va a mostrar en la del API REST. Es la respuesta del postman
+
+    def to_representation(self, instance):
         user = User.objects.get(id_user=instance.id_user)
-        tarjeta = Tarjeta.objects.get(cliente=user.id_user) 
+        tarjeta = Tarjeta.objects.get(cliente=user.id_user)
         return {
             "id_user": user.id_user,
             "username": user.username,
@@ -44,6 +44,5 @@ class UserSerializer(serializers.ModelSerializer):
                 "id_tarjeta": tarjeta.id_tarjeta,
                 "nombre_propietario": tarjeta.nombre_propietario,
                 "tipo": tarjeta.tipo
-                }               
+            }
         }
-    
