@@ -1,34 +1,34 @@
-import jwt
 from django.conf import settings
-from vuelosApp.models.user import User
+import jwt
 from rest_framework import status
 from rest_framework.test import APITestCase
+from vuelosApp.models.user import User
 
 
 class TestAPI(APITestCase):
-    
+
     def test_signUp(self):
         previos_user_count = User.objects.all().count()
         new_user = {
-            "username": "user1",
-            "password": "pass1",
-            "first_name": "Usuario1",
-            "last_name": "Usuario1",
-            "email": "user1@misiontic.com",   
+            "username": "new_user",
+            "password": "new_pass",
+            "first_name": "New User",
+            "last_name": "Usuario",
+            "email": "newuser@misiontic.com",
             "tarjeta": {
                 "nombre_propietario": "Usuario",
                 "fecha_vencimiento": "2024-11-01",
                 "tipo" : "A"
-            } 
+            }
         }
         response = self.client.post(
             '/user/',
-            new_user, 
+            new_user,
             format='json'
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual('refresh' in response.data.keys(), True)
-        self.assertEqual('access' in response.data.keys(), True)
+        self.assertIn('refresh', response.data)
+        self.assertIn('access', response.data)
         self.assertEqual(User.objects.all().count(), previos_user_count + 1)
 
     def test_login(self):
@@ -42,8 +42,8 @@ class TestAPI(APITestCase):
             format='json'
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual('refresh' in response.data.keys(), True)
-        self.assertEqual('access' in response.data.keys(), True)
+        self.assertIn('refresh', response.data)
+        self.assertIn('access', response.data)
 
     def authenticate(self):
         token_access = self.client.post(
@@ -58,7 +58,7 @@ class TestAPI(APITestCase):
         secret = settings.SECRET_KEY
 
         id_user = jwt.decode(
-            token_access, secret, 
+            token_access, secret,
             algorithms=settings.SIMPLE_JWT["ALGORITHM"]).get("user_id")
 
         self.client.credentials(
@@ -85,6 +85,7 @@ class TestAPI(APITestCase):
             new_reservation,
             format='json'
         )
+        print("response for debugging\n\n", response, response.json())
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_reservalistview(self):

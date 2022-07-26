@@ -145,3 +145,6 @@ ReservasVuelos/static/
 
 # Cython debug symbols
 cython_debug/
+
+# IDE
+.vscode/
