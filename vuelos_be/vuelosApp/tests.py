@@ -77,7 +77,7 @@ class TestAPI(APITestCase):
         id_user = self.authenticate()
         new_reservation = {
             "cliente": id_user,
-            "vuelo": 1,
+            "vuelo": 6,
             "puestos": 2
         }
         response = self.client.post(

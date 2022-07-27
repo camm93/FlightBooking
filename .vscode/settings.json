@@ -1,0 +1,14 @@
+{
+    "python.testing.pytestArgs": [
+        "vuelos_be"
+    ],
+    "python.testing.unittestEnabled": true,
+    "python.testing.pytestEnabled": false,
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./vuelos_be",
+        "-p",
+        "test_*.py"
+    ]
+}
