@@ -24,5 +24,3 @@ class FlightBooking():
         vuelo = Vuelo.objects.get(id_vuelo=reserva.vuelo.id_vuelo)
         vuelo.cupos += (old_puestos - new_puestos)
         vuelo.save()
-    
-

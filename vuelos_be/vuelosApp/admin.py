@@ -42,5 +42,3 @@ admin.site.register(Reserva, ReservaAdmin)
 admin.site.register(Tarjeta, TarjetaAdmin)
 admin.site.register(User, UserAdmin)
 admin.site.register(Vuelo, VueloAdmin)
-
-

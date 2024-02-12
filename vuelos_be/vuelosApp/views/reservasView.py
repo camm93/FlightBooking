@@ -100,5 +100,3 @@ class ReservaUpdateView(generics.UpdateAPIView):
         
         FlightBooking.update_seats(reserva_id=self.kwargs["pk"], new_puestos=request.data["puestos"]) 
         return super().partial_update(request, *args, **kwargs)        
-
-

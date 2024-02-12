@@ -46,4 +46,3 @@ class UserSerializer(serializers.ModelSerializer):
                 "tipo": tarjeta.tipo
                 }               
         }
-    

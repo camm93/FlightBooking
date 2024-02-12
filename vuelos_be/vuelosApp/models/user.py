@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
 from django.contrib.auth.hashers import make_password
 from django.core.validators import MinLengthValidator
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 class UserManager(BaseUserManager):
@@ -28,14 +28,14 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault("is_superuser", True)  # Provides all superuser permissions
         extra_fields.setdefault("is_active", True)     # use is_active = False instead of deleting accounts
 
-        if not extra_fields.get('is_staff'):
-            raise ValueError(_("Superusers must have is_staff = True"))
+        # if not extra_fields.get('is_staff'):
+        #     raise ValueError(_("Superusers must have is_staff = True"))
 
-        if not extra_fields.get('is_superuser'):
-            raise ValueError(_("Superusers must have is_superuser = True"))
+        # if not extra_fields.get('is_superuser'):
+        #     raise ValueError(_("Superusers must have is_superuser = True"))
 
-        if not extra_fields.get('is_active'):
-            raise ValueError(_("Superusers must have is_active = True"))
+        # if not extra_fields.get('is_active'):
+        #     raise ValueError(_("Superusers must have is_active = True"))
 
         return self.create_user(username, password, **extra_fields)
 
@@ -66,4 +66,3 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return "Username: {}, Email: {}".format(
             self.username, self.email)
-
