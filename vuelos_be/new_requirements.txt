@@ -1,0 +1,8 @@
+django
+django-cors-headers
+djangorestframework
+djangorestframework-simplejwt
+drf-yasg  # swagger
+python-decouple
+psycopg2
+whitenoise  # To serve static files

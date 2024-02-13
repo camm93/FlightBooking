@@ -28,14 +28,14 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault("is_superuser", True)  # Provides all superuser permissions
         extra_fields.setdefault("is_active", True)     # use is_active = False instead of deleting accounts
 
-        if not extra_fields.get('is_staff'):
-            raise ValueError(_("Superusers must have is_staff = True"))
+        # if not extra_fields.get('is_staff'):
+        #     raise ValueError(_("Superusers must have is_staff = True"))
 
-        if not extra_fields.get('is_superuser'):
-            raise ValueError(_("Superusers must have is_superuser = True"))
+        # if not extra_fields.get('is_superuser'):
+        #     raise ValueError(_("Superusers must have is_superuser = True"))
 
-        if not extra_fields.get('is_active'):
-            raise ValueError(_("Superusers must have is_active = True"))
+        # if not extra_fields.get('is_active'):
+        #     raise ValueError(_("Superusers must have is_active = True"))
 
         return self.create_user(username, password, **extra_fields)
 

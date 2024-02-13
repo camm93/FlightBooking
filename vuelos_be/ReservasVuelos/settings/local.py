@@ -1,7 +1,7 @@
 from datetime import timedelta
 from decouple import config
 from pathlib import Path
-import django_heroku
+# import django_heroku
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'vuelosApp',
+    'whitenoise.runserver_nostatic',
     'corsheaders',
     'rest_framework_simplejwt',
     'drf_yasg',
@@ -108,12 +109,13 @@ WSGI_APPLICATION = 'ReservasVuelos.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# If you get encoding errors when migrating, please double-check your credentials.
 DATABASES = {
     'default': {
-        'ENGINE': "django.db.backends.postgresql_psycopg2",
-        'NAME': "flight_booking_local",
+        'ENGINE': "django.db.backends.postgresql",
+        'NAME': "vuelosdb",
         'USER': "postgres",
-        'PASSWORD': "postgres",
+        'PASSWORD': "admin",
         'HOST': "localhost",
         'PORT': "5432",
         'TEST': {'MIRROR': 'default',},
@@ -165,4 +167,4 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-django_heroku.settings(locals())
+# django_heroku.settings(locals())
