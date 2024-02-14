@@ -8,8 +8,30 @@ from vuelosApp.models.user import User
 
 class TestAPI(APITestCase):
 
+    def setUp(self):
+        self._create_default_user()
+
+    def _create_default_user(self):
+        user = {
+            "username": "default_user",
+            "password": "default_pass",
+            "first_name": "Default User",
+            "last_name": "Usuario",
+            "email": "defaultuser@misiontic.com",
+            "tarjeta": {
+                "nombre_propietario": "Default",
+                "fecha_vencimiento": "2024-11-01",
+                "tipo" : "A"
+            }
+        }
+        response = self.client.post(
+            '/user/',
+            user,
+            format='json'
+        )
+
     def test_signUp(self):
-        previos_user_count = User.objects.all().count()
+        previous_user_count = User.objects.all().count()
         new_user = {
             "username": "new_user",
             "password": "new_pass",
@@ -30,12 +52,12 @@ class TestAPI(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertIn('refresh', response.data)
         self.assertIn('access', response.data)
-        self.assertEqual(User.objects.all().count(), previos_user_count + 1)
+        self.assertEqual(User.objects.all().count(), previous_user_count + 1)
 
     def test_login(self):
         user = {
-            "username": "Papo20",
-            "password": "contraseña"
+            "username": "default_user",
+            "password": "default_pass"
         }
         response = self.client.post(
             '/login/',
@@ -50,8 +72,8 @@ class TestAPI(APITestCase):
         token_access = self.client.post(
             '/login/',
             {
-                "username": "pepito89",
-                "password": "micontraseña"
+                "username": "default_user",
+                "password": "default_pass"
             },
             format='json'
         ).data.get("access")
@@ -72,7 +94,7 @@ class TestAPI(APITestCase):
             '/user/{}'.format(id_user)
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["username"], "pepito89")
+        self.assertEqual(response.data["username"], "default_user")
 
     @skip("IntegrityError, to review later")
     def test_reservacreateview(self):
