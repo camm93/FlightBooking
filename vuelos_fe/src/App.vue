@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Tus vuelos</title>
+    <title>Flights</title>
 
     <link rel="shortcut icon" href="./assets/avion.png" type="image/x-icon" />
   </head>
@@ -20,7 +20,7 @@
               height="24"
               class="d-inline-block align-text-top"
             />
-            Tus Vuelos
+            Book Your Next Flight
           </a>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -31,11 +31,11 @@
                   data-bs-toggle="modal"
                   data-bs-target="#exampleModalVuelos"
                 >
-                  Buscar Vuelos
+                  Search
                 </button>
 
                 <button v-if="is_auth" v-on:click="loadReservas" class="btn btn-outline-primary">
-                  Mis Reservaciones
+                  My Reservations
                 </button>
 
                 <button
@@ -43,7 +43,7 @@
                   v-on:click="loadHome"
                   class="btn btn-outline-dark"
                 >
-                  Inicio
+                  Home
                 </button>
               </li>
             </ul>
@@ -56,7 +56,7 @@
                 data-bs-toggle="modal"
                 data-bs-target="#exampleModal"
               >
-                Registrarse
+                Create an Account
               </button>
 
               <!-- Button trigger modal -->
@@ -67,7 +67,7 @@
                 data-bs-toggle="modal"
                 data-bs-target="#exampleModalTwo"
               >
-                Iniciar Sesión
+                Log In
               </button>
 
               <button
@@ -75,7 +75,7 @@
                 v-on:click="loadAccount"
                 class="btn btn-outline-dark"
               >
-                Cuenta
+                Account
               </button>
 
               <button
@@ -83,7 +83,7 @@
                 v-on:click="logOut"
                 class="btn btn-danger"
               >
-                Cerrar Sesión
+                Log Out
               </button>
             </div>
           </div>
@@ -215,7 +215,7 @@ export default {
     },   
     logOut: function () {
       localStorage.clear();
-      alert("Sesión Cerrada");
+      alert("Closing Session");
       this.verifyAuth();
     },
     completedLogIn: function (data) {
@@ -223,11 +223,11 @@ export default {
       localStorage.setItem("username", data.username);
       localStorage.setItem("token_access", data.token_access);
       localStorage.setItem("token_refresh", data.token_refresh);
-      alert("Autenticación Exitosa");
+      alert("Authentication Successful");
       this.verifyAuth();
     },
     completedSignUp: function (data) {
-      alert("Registro Exitoso");
+      alert("Account Created");
       this.completedLogIn(data);
     },
     completedReservation: function () {

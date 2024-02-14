@@ -1,7 +1,7 @@
 <template>
   <div class="greetings">
     <h1>
-      ¡Bienvenido&nbsp; <span> {{ username }} </span>!
+      Welcome&nbsp; <span> {{ username }} </span>!
     </h1>
     <h2 v-if= username>
       Ahora puedes dirigirte a la sección <span> Buscar vuelos </span> y realizar tus reservaciones.

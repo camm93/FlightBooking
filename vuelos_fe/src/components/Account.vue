@@ -5,25 +5,25 @@
 
       <div class="right">
         <div class="information">
-          <h1>Información de su cuenta</h1>
+          <h1>Account Information</h1>
           <h2>
-            Nombres: <span>{{ nombres }}</span>
+            First & Middle Name: <span>{{ nombres }}</span>
           </h2>
           <h2>
-            Apellidos: <span>{{ apellidos }}</span>
+            Last Name: <span>{{ apellidos }}</span>
           </h2>
           <h2>
-            Correo electrónico: <span>{{ correo }}</span>
+            Email: <span>{{ correo }}</span>
           </h2>
           <h2>
-            Número de tarjeta: <span>{{ id_tarjetas }}</span>
+            Card Number: <span>{{ id_tarjetas }}</span>
           </h2>
           <h2>
-            Nombre de propietario: <span>{{ nombre_propietario }}</span>
+            Card Owner Full Name: <span>{{ nombre_propietario }}</span>
           </h2>
 
           <h2>
-            Tipo de tarjeta: <span>{{ tipo_text }}</span>
+            Card Type: <span>{{ tipo_text }}</span>
           </h2>
         </div>
       </div>
@@ -69,7 +69,7 @@ export default {
       await this.verifyToken();
 
       let token = localStorage.getItem("token_access");
-      let userId = jwt_decode(token).user_id.toString(); // id_user o user_id
+      let userId = jwt_decode(token).user_id.toString(); // id_user or user_id as built on the BE
 
       axios.get(`user/${userId}`, {
         headers: {Authorization: `Bearer ${token}`}

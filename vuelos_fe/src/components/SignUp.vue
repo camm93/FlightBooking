@@ -9,7 +9,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Registrarse</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Sign Up</h5>
           <button
             type="button"
             class="btn-close"
@@ -22,27 +22,27 @@
           <div class="modal-body">
             <div class="mb-3">
               <label for="formGroupExampleInput" class="form-label"
-                >Nombres</label
+                >Name</label
               >
               <input
                 type="text"
                 v-model="user.first_name"
                 class="form-control"
                 id="formGroupExampleInput"
-                placeholder="Ingresa tu nombre"
+                placeholder="Enter your name"
               />
             </div>
 
             <div class="mb-3">
               <label for="formGroupExampleInput2" class="form-label"
-                >Apellidos</label
+                >Last Name</label
               >
               <input
                 type="text"
                 v-model="user.last_name"
                 class="form-control"
                 id="formGroupExampleInput2"
-                placeholder="Ingresa tus apellidos"
+                placeholder="Enter your last name"
               />
             </div>
 
@@ -55,50 +55,50 @@
                 v-model="user.username"
                 class="form-control"
                 id="formGroupExampleInput3"
-                placeholder="Ingresa tu username"
+                placeholder="Enter your username"
               />
             </div>
 
             <div class="mb-3">
               <label for="formGroupExampleInput4" class="form-label"
-                >Contraseña</label
+                >Password</label
               >
               <input
                 type="password"
                 v-model="user.password"
                 class="form-control"
                 id="formGroupExampleInput4"
-                placeholder="Ingresa tu contraseña"
+                placeholder="Enter your password"
               />
             </div>
 
             <div class="mb-3">
               <label for="formGroupExampleInput5" class="form-label"
-                >Correo electrónico</label>
+                >Email</label>
               <input
-                type="text"
+                type="email"
                 v-model="user.email"
                 class="form-control"
                 id="formGroupExampleInput5"
-                placeholder="Ingresa tu correo electrónico"
+                placeholder="Enter your email address"
               />
             </div>
 
             <div class="mb-3">
               <label for="formGroupExampleInput6" class="form-label"
-                >Nombre del propietario de la tarjeta</label
+                >Credit/debit card owner</label
               >
               <input
                 type="text"
                 v-model="user.tarjeta.nombre_propietario"
                 class="form-control"
                 id="formGroupExampleInput6"
-                placeholder="Ingresa nombre y apellido"
+                placeholder="Enter card owner's full name"
               />
             </div>
 
             <div class="mb-3">
-              <label class="form-label">Tipo de Tarjeta</label>
+              <label class="form-label">Card Type</label>
               <div>
                 <select class="form-select" v-model="selected" >
                   <option v-for="option in options" :key="option.text" :value="option.value"> {{option.text}} </option>
@@ -108,27 +108,27 @@
 
             <div class="mb-3">
               <label for="formGroupExampleInput8" class="form-label"
-                >Código (3 dígitos)</label
+                >Security Code (3 digits)</label
               >
               <input
                 type="text" maxlength="3"
                 v-model="user.tarjeta.codigo"
                 class="form-control"
                 id="formGroupExampleInput8"
-                placeholder="Ingresa el código único de tu tarjeta"
+                placeholder="Enter the security code"
               />
             </div>
 
             <div class="mb-3">
               <label for="formGroupExampleInput9" class="form-label"
-                >Fecha Vencimiento</label
+                >Expiration Date</label
               >
               <input
                 type="date"
                 v-model="user.tarjeta.fecha_vencimiento"
                 class="form-control"
                 id="formGroupExampleInput9"
-                placeholder="Ingresa la fecha en formato YYYY-MM-DD"
+                placeholder="Enter the expiration date (YYYY-MM-DD)"
               />
             </div>
 
@@ -138,7 +138,7 @@
                 type="submit"
                 data-bs-dismiss="modal"
               >
-                Registrarse
+                Submit
               </button>
             </div>
           </div>

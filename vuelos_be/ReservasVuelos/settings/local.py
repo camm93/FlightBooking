@@ -113,9 +113,9 @@ WSGI_APPLICATION = 'ReservasVuelos.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': "django.db.backends.postgresql",
-        'NAME': "vuelosdb",
+        'NAME': "flight_booking_local",
         'USER': "postgres",
-        'PASSWORD': "admin",
+        'PASSWORD': "postgres",
         'HOST': "localhost",
         'PORT': "5432",
         'TEST': {'MIRROR': 'default',},

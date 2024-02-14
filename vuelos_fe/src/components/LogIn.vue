@@ -10,7 +10,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Iniciar Sesión</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Log In</h5>
           <button
             type="button"
             class="btn-close"
@@ -22,31 +22,31 @@
           <div class="modal-body">
             <div class="mb-3">
               <label for="formGroupExampleInput1" class="form-label"
-                >Usuario</label
+                >Username</label
               >
               <input
                 type="text"
                 v-model="user.username"
                 class="form-control"
                 id="formGroupExampleInput1"
-                placeholder="Ingresa tu nombre de usuario"
+                placeholder="Enter your username"
               />
             </div>
             <div class="mb-3">
               <label for="formGroupExampleInput2" class="form-label"
-                >Contraseña</label
+                >Password</label
               >
               <input
                 type="password"
                 v-model="user.password"
                 class="form-control"
                 id="formGroupExampleInput2"
-                placeholder="Ingresa tu contraseña"
+                placeholder="Enter your password"
               />
             </div>
             <div class="d-grid gap-2 col-6 mx-auto">
               <button class="btn btn-primary" type="submit" data-bs-dismiss="modal">
-                Iniciar Sesión
+                Done!
               </button>
             </div>
           </div>
@@ -90,10 +90,10 @@ export default {
         .catch((error) => {
 
           if (this.user.username == ""  || this.user.password == ""  )
-            alert("Falta un nombre de usuario y/o contraseña")
+            alert("All fields are mandatory.")
   
           if (error.response.status == "401")
-            alert("ERROR 401: Credenciales Incorrectas.");
+            alert("ERROR 401: Wrong Credentials");
 
           this.user.username = ""
           this.user.password = ""
